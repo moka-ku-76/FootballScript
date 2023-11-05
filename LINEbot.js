@@ -1,6 +1,5 @@
-
-const CHANNEL_SECRET = "bb5cced1f0e3763a061acc4191c89acf";
-const ACCESS_TOKEN = '58hhkOdxjCUpT0kIVqMoW9hTTa3DdWg6XkrUS2xkNo1y5oqU21XTMWNwOmD6AqEks+59gnNgxkoCyUBBt91sH9GPWeUHLMCz8zADFdJbmKw8/DuJjkb3n+32Cw7l5DXjOx86z7rbp9IDbfi0fJ2azQdB04t89/1O/w1cDnyilFU=';
+const ScriptProperties = PropertiesService.getScriptProperties();
+const ACCESS_TOKEN = ScriptProperties.getProperty('LINEtoken')
 // const bot = new LineBotSdk.client(ACCESS_TOKEN);
 const bot = new MyLineBotSdk(ACCESS_TOKEN);
 // const userId = "U5f458bdf51f8ad2a5f5920e1be7d4d67";
@@ -8,18 +7,6 @@ const MAX_QUICK_REPLY_ITEMS = 12;
 const members = paramSheet.getRange('A2:A').getValues().flat().filter(Boolean);
 let message;
 
-//ロードマップ
-
-//助っ人追加機能
-  //プレイヤー追加関数
-    //引数は参加者の名前
-  //プレイヤー確認関数
-    //最新の試合の人数が合っているかチェック
-    //合っていない場合
-//infoの実装
-//チーム分割数変更
-//キャンセル機能の追加
-//チーム名の入力
 
 async function testLINE(){
   const events = {

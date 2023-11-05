@@ -1,1 +1,6 @@
-{"scriptId":"1WjVmdstb9ZSP8pgEZ2Awh1Wn4pnuJGA5sOSKKVQhbb87yPiVqcDEjr_t","rootDir":"/Users/mokamoka/Documents/workspace/AppsScript"}
+{
+    "scriptId":"1WjVmdstb9ZSP8pgEZ2Awh1Wn4pnuJGA5sOSKKVQhbb87yPiVqcDEjr_t",
+    "rootDir":"/Users/mokamoka/Documents/workspace/FootballScript",
+    "projectId":"add-schedule-401311",
+    "oauthScopes": ["https://www.googleapis.com/auth/script.external_request", "https://www.googleapis.com/auth/script.scriptapp"]
+}
