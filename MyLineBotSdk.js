@@ -103,48 +103,8 @@ function MyLineBotSdk(accessToken) {
 
     return responseJson.displayName;
   }
-
-
   return lineBotClient;
 }
-
-
-
-
-	// [ 'constructor',
-  // 'call',
-  // 'bool',
-  // 'textMessage',
-  // 'emoji',
-  // 'imageMessage',
-  // 'videoMessage',
-  // 'flexMessage',
-  // 'carouselMessage',
-  // 'replyMessage',
-  // 'pushMessage',
-  // 'multicastMessage',
-  // 'broadcastMessage',
-  // 'aPostback',
-  // 'aMessage',
-  // 'aUri',
-  // 'aSwitch',
-  // 'area',
-  // 'richmenu',
-  // 'createRichMenu',
-  // 'setRichMenuImage',
-  // 'getRichMenuList',
-  // 'getRichMenu',
-  // 'deleteRichMenu',
-  // 'setDefaultRichMenu',
-  // 'deleteDefaultRichMenu',
-  // 'linkRichMenuToUser',
-  // 'linkRichMenuToMultipleUsers',
-  // 'unlinkRichMenuFromUser',
-  // 'unlinkRichMenusFromMultipleUsers',
-  // 'createRichMenuArias',
-  // 'getRichMenuAriasList',
-  // 'deleteRichMenuArias',
-  // 'updateRichMenuArias' ]
 
 function getArguments(func) {
   const funcString = func.toString();
@@ -153,13 +113,5 @@ function getArguments(func) {
 }
 
 function confirmInstance(){
-  // console.log(bot);
-  // console.log(bot.accessToken);
-  // console.log(typeof(bot));
-  // console.log(Object.getOwnPropertyNames(bot))
-  // // console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(bot)))
   console.log(getArguments(bot.replyMessage))
-  // console.log(bot2)
-  // console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(bot2)))
-  // bot2.newMethod();
 }

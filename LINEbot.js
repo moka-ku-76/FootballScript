@@ -1,45 +1,10 @@
 const ScriptProperties = PropertiesService.getScriptProperties();
-const ACCESS_TOKEN = ScriptProperties.getProperty('LINEtoken')
-// const bot = new LineBotSdk.client(ACCESS_TOKEN);
+const ACCESS_TOKEN = ScriptProperties.getProperty('LINEtoken');
 const bot = new MyLineBotSdk(ACCESS_TOKEN);
-// const userId = "U5f458bdf51f8ad2a5f5920e1be7d4d67";
+
 const MAX_QUICK_REPLY_ITEMS = 12;
 const members = paramSheet.getRange('A2:A').getValues().flat().filter(Boolean);
 let message;
-
-
-async function testLINE(){
-  const events = {
-    "events": [
-      {
-        "type": "message",
-        "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
-        "source": {
-          "userId": "U5f458bdf51f8ad2a5f5920e1be7d4d67",
-          "type": "user"
-        },
-        "timestamp": 1462629479859,
-        "message": {
-          "type": "text",
-          "id": "325708",
-          "text": "テストです"
-        }
-      }
-    ]
-  }
-  const latestResultSheetName = getLatestResultSheetName();
-  const latestResultSheet = ss.getSheetByName(latestResultSheetName);
-  const e = events['events'][0];
-  let criteria = "ポイント"
-  setPool(latestResultSheet, criteria=criteria);
-  message = `${criteria}を元にプールを作成しました。\n`
-  const poolInfo = getPoolInfo(latestResultSheet);
-  message += poolInfo;
-  console.log(message);
-
-}
-
-
 
 
 function doPost(e) { bot.call(e, callback) };
@@ -162,6 +127,9 @@ async function callback(e) {
             message = '登録メンバー: \n' + members.join('\n');
             logMessage(e, message);
             break
+          case "@goalcancel":
+            whoseGoalCanceld(e)
+            break
         }
       }
       break
@@ -183,6 +151,11 @@ async function callback(e) {
             message = `${memberScoredGoal} のゴールを記録しました。`;
             logMessage(e, message);
             break;
+          case 'CANCEL_GOAL':
+            const memberCanceledGoal = splitedData;
+            goal(latestResultSheet, memberCanceledGoal);
+            message = `${memberCanceledGoal} のゴールを取り消しました。`;
+            logMessage(e, message);
           case 'SET_CRITERIA':
             if(splitedData == "STAY"){
               message = getPoolInfo(latestResultSheet);
@@ -332,22 +305,3 @@ function createHelpMessage() {
   `;
 }
 
-
-
-
-
-
-function testMessage(message=""){
-  const userId = "U5f458bdf51f8ad2a5f5920e1be7d4d67";
-  bot.pushMessage(userId, message + "OK");
-}
-
-function implementingMessage(e){
-  const message = bot.textMessage('実装中です');
-  bot.replyMessage(e, [message]);
-}
-
-function logMessage(e, message){
-  message = bot.textMessage(message);
-  bot.replyMessage(e, [message]);
-}

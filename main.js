@@ -1,5 +1,3 @@
-// const spreadsheetId = "1jk1EZQPj5sRJZ04iZPo3vJKOYPTcQtSGflxL7kH0-tE";
-// const ss = SpreadsheetApp.openById(spreadsheetId);
 const ss = SpreadsheetApp.getActiveSpreadsheet();
 const paramSheet = ss.getSheetByName("変数");
 const tmpSheet = ss.getSheetByName("テンプレート");
@@ -9,6 +7,7 @@ const recordSheet = ss.getSheetByName("記録");
 const STATIC_SHEETS_NUMBER = 5;
 const MAX_RATE = 5; //レートの最大値
 
+const transpose = a=> a[0].map((_, c) => a.map(r => r[c]));
 
 //その日のシートを作成する。
 function createDatedResultSheet(dateString){
@@ -18,12 +17,6 @@ function createDatedResultSheet(dateString){
     throw Error("シートは既に存在しています");
   }
 
-  // let i = 1;
-  // while(ss.getSheetByName(sheet_name) !== null){
-  //   i++;
-  //   sheet_name = dateString + '-' + i;
-  // }
-
   let newSheet = tmpSheet.copyTo(ss);
   newSheet.setName(sheet_name);
   newSheet.setTabColor(null);
@@ -31,9 +24,6 @@ function createDatedResultSheet(dateString){
   ss.moveActiveSheet(STATIC_SHEETS_NUMBER + 1);
   return sheet_name;
 }
-
-
-const transpose = a=> a[0].map((_, c) => a.map(r => r[c]));
 
 ////試合エリア
 const startRowOfMatchRange = 1;
@@ -111,24 +101,7 @@ function finishMatch(sheet) {
   }
 }
 
-
-function testmain(){
-  const date = "2023-06-11";
-  const sheet = ss.getSheetByName(date);
-  getMatchInfo(sheet);
-  setPool(sheet, "ポイント");
-  // finishMatch(sheet);
-  // applyResultToSheet(sheet);
-  // deleteLastMatch(sheet);
-  // const info = getPoolInfo(sheet)
-  // console.log(info)
-  // inputRecordEachDay();
-  // const goals = countGoals(sheet);
-  // console.log(goals)
-
-}
-
-
+//終了した試合数をカウント。背景色がグレーの場合試合が終了している。
 function getFinishedMatchesNumber(sheet) {
   const gray = '#808080'; // グレーのカラーコード
   const currentMatchsNumber = getMatchesNumber(sheet);
@@ -161,7 +134,8 @@ function getParticipantsNumber(sheet){
   return participantsNumber;
 }
 
-//現在の参加者の名前リスト
+
+//現在の参加者の名前リストを取得
 function getParticipants(sheet){
   const num_columns = getParticipantsNumber(sheet);
   if(num_columns == 0){
@@ -198,6 +172,7 @@ function getLatestResultSheetName(){
   return latestResultSheetName;
 }
 
+
 function sumArray(...arr){
   let ret_arr = arr[0].slice();
   for(let i=1;i<arr.length;i++){
@@ -207,7 +182,6 @@ function sumArray(...arr){
   }
   return ret_arr;
 }
-
 
 
 function countResult(array){
@@ -244,7 +218,6 @@ function sumEach(array){
 
 function countGoals(sheet){
   let goals = {};  //プレイヤーごとのゴール数を格納するオブジェクト
-
   const finishedMatchsNumber = getFinishedMatchesNumber(sheet);  //終了した試合数。データを取得する範囲で使用
   console.log(finishedMatchsNumber);
   const values = sheet.getRange(1, 2, finishedMatchsNumber * heightOfMatch, 3).getValues();  //選手名とゴールのデータ
@@ -264,7 +237,6 @@ function countGoals(sheet){
       }
     }
   });
-
   return goals;
 }
 
@@ -651,35 +623,53 @@ function makeResultRange(sheet, number){
 
 function goal(sheet, name){
   //最新の試合記録範囲を取得
-  // const currentMatchsNumber = getMatchesNumber(sheet);
   const finishedMatchsNumber = getFinishedMatchesNumber(sheet);
   const latestMatchRange = sheet.getRange(finishedMatchsNumber * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfMatch);
   //チーム、ゴール範囲を取得
   const alphaPlayersRange = latestMatchRange.offset(1, 1, heightOfMatch - 4, 1);
-  const scoresRange = latestMatchRange.offset(1, 2, heightOfMatch - 4, 1);
+  const scoresRange = latestMatchRange.offset(1, 2, heightOfMatch - 4, 1);くく
   const betaPlayersRange = latestMatchRange.offset(1, 3, heightOfMatch - 4, 1);
   //範囲の中からnameと等しいセルを探索し、該当するゴール範囲を編集
   const alphaPlayersArray = alphaPlayersRange.getValues();
   const betaPlayersArray = betaPlayersRange.getValues();
   for(let i = 0; i < alphaPlayersArray.length; i++) {
-    if(alphaPlayersArray[i][0] === name) {
-      const scoreCell = scoresRange.offset(i,0,1,1);
+    if(alphaPlayersArray[i][0] === name || betaPlayersArray[i][0] === name) {
+      const scoreCell = scoresRange.offset(i, 0, 1, 1);
       let scores = scoreCell.getValue().split(",");
-      scores[0] = parseInt(scores[0]) + 1;
-      scoreCell.setValue(scores.join(","));
-      return;
-    }
-  }
-  for(let i = 0; i < betaPlayersArray.length; i++) {
-    if(betaPlayersArray[i][0] === name) {
-      const scoreCell = scoresRange.offset(i,0,1,1);
-      let scores = scoreCell.getValue().split(",");
-      scores[1] = parseInt(scores[1]) + 1;
+      const teamIndex = alphaPlayersArray[i][0] === name ? 0 : 1;
+      scores[teamIndex] = Math.max(0, parseInt(scores[teamIndex]) + 1); // ゴール数を1増やす
       scoreCell.setValue(scores.join(","));
       return;
     }
   }
 }
+
+
+function cancelGoal(sheet, name) {
+  // 最新の試合記録範囲を取得
+  const finishedMatchsNumber = getFinishedMatchesNumber(sheet);
+  const latestMatchRange = sheet.getRange(finishedMatchsNumber * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfMatch);
+  // チーム、ゴール範囲を取得
+  const alphaPlayersRange = latestMatchRange.offset(1, 1, heightOfMatch - 4, 1);
+  const scoresRange = latestMatchRange.offset(1, 2, heightOfMatch - 4, 1);
+  const betaPlayersRange = latestMatchRange.offset(1, 3, heightOfMatch - 4, 1);
+  // 範囲の中からnameと等しいセルを探索し、該当するゴール範囲を編集
+  const alphaPlayersArray = alphaPlayersRange.getValues();
+  const betaPlayersArray = betaPlayersRange.getValues();
+
+  for(let i = 0; i < alphaPlayersArray.length; i++) {
+    if(alphaPlayersArray[i][0] === name || betaPlayersArray[i][0] === name) {
+      const scoreCell = scoresRange.offset(i, 0, 1, 1);
+      let scores = scoreCell.getValue().split(",");
+      const teamIndex = alphaPlayersArray[i][0] === name ? 0 : 1;
+      scores[teamIndex] = Math.max(0, parseInt(scores[teamIndex]) - 1); // ゴール数を1減らす
+      scoreCell.setValue(scores.join(","));
+      return;
+    }
+  }
+}
+
+
 
 function setMatchInfo({sheet, target, teamAlphaName = "", teamBetaName = "", playersAlpha = [], playersBeta = [], rate = ""}) {
   //対象の試合記録範囲を取得
@@ -819,15 +809,6 @@ function generateMatchSummary(sheet, target = -1) {
     summary += `${teamAlphaName || ""}`.padEnd(10, " ") + "vs" + `${teamBetaName || ""}`.padStart(10, " ") + '\n';
   }
 
-  // for (let i = 0; i < maxPlayers; i++) {
-  //   summary += playersAlpha[i].padEnd(10, " ") + playersBeta[i].padStart(10, " ") + '\n';
-  // }
-
-  // summary += "\n" + "スコア".padStart(8, " ") + "\n";
-  // summary += `${scoreAlpha}`.padEnd(5, " ") + "-" + `${scoreBeta}`.padStart(5, " ") + '\n';
-  
-  // summary += "\n" + "ポイント".padStart(8, " ") + "\n";
-  // summary += `${pointAlpha}`.padEnd(5, " ") + "-" + `${pointBeta}`.padStart(5, " ") + '\n';
   const len = 18;
   const fill = "　";
   // const fill = "\u3000";
@@ -840,7 +821,6 @@ function generateMatchSummary(sheet, target = -1) {
   
   summary += "\n" + padCenter("ポイント", len + 1, fill) + "\n";
   summary += padCenter(`${pointAlpha}`, len/2, fill) + "-" + padCenter(`${pointBeta}`, len/2, fill) + '\n';
-
 
   return summary;
 }
@@ -855,38 +835,6 @@ function padCenter(str, len, fill) {
   return str.padStart(str.length + leftPadding, fill).padEnd(len, fill);
 }
 
-
-// function createMatchInfoMessage(sheet, target = -1){
-//   const matchInfo = getMatchInfo(sheet, target=target);
-//   const matchNo = matchInfo.No;
-//   const rate = matchInfo.rate;
-//   let teamAlphaName = matchInfo.teamAlphaName || '';
-//   let teamBetaName = matchInfo.teamBetaName || '';
-//   const playersAlpha = matchInfo.playersAlpha;
-//   const playersBeta = matchInfo.playersBeta;
-//   const scoreAlpha = matchInfo.scoreAlpha;
-//   const scoreBeta = matchInfo.scoreBeta;
-//   const pointAlpha = matchInfo.pointAlpha;
-//   const pointBeta = matchInfo.pointBeta;
-
-//   let teamNamesString = '';
-//   if (teamAlphaName || teamBetaName) {
-//       teamNamesString = `${teamAlphaName.padEnd(10)} vs ${teamBetaName.padStart(10)}`;
-//   }
-
-//   let playersAlphaString = playersAlpha.map(player => player.padEnd(10)).join('\n');
-//   let playersBetaString = playersBeta.map(player => player.padStart(10)).join('\n');
-
-//   let message = `第${matchNo}試合 レート ${rate}\n`;
-//   message += teamNamesString + '\n';
-//   message += `${playersAlphaString}\nvs\n${playersBetaString}\n`;
-//   message += 'スコア\n';
-//   message += `${scoreAlpha.toString().padEnd(10)} - ${scoreBeta.toString().padStart(10)}\n`;
-//   message += 'ポイント\n';
-//   message += `${pointAlpha.toString().padEnd(10)} - ${pointBeta.toString().padStart(10)}`;
-
-//   return message;
-// }
 
 function registerMember(profileName, userId) {
   return new Promise((resolve, reject) => {
