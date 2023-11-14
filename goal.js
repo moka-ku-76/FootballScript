@@ -1,3 +1,4 @@
+// 誰のゴールかを尋ねるためのクイックリプライを作成する関数
 function createQuickReplyItemsForScorers(pageNumber) {
   // 開始インデックスを計算
   const startIndex = pageNumber * MAX_QUICK_REPLY_ITEMS;
@@ -39,7 +40,7 @@ function createQuickReplyItemsForScorers(pageNumber) {
   return quickReplyItems;
 }
 
-
+// キャンセルするゴールを尋ねるためのクイックリプライをを作成する関数
 function createQuickReplyItemsForCancelGoal(pageNumber) {
   // 開始インデックスを計算
   const startIndex = pageNumber * MAX_QUICK_REPLY_ITEMS;
@@ -95,7 +96,7 @@ function whoScored(e, pageNumber = 0) {
   bot.quickPushMessage(userId, messages);
 }
 
-//ゴール決めた人を尋ねるクイックリプライ
+//キャンセルするゴールを尋ねるクイックリプライ
 function whoseGoalCanceld(e, pageNumber = 0) {
   const quickReplyItems = createQuickReplyItemsForCancelGoal(pageNumber);
   const messages = {
