@@ -627,7 +627,7 @@ function goal(sheet, name){
   const latestMatchRange = sheet.getRange(finishedMatchsNumber * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfMatch);
   //チーム、ゴール範囲を取得
   const alphaPlayersRange = latestMatchRange.offset(1, 1, heightOfMatch - 4, 1);
-  const scoresRange = latestMatchRange.offset(1, 2, heightOfMatch - 4, 1);くく
+  const scoresRange = latestMatchRange.offset(1, 2, heightOfMatch - 4, 1);
   const betaPlayersRange = latestMatchRange.offset(1, 3, heightOfMatch - 4, 1);
   //範囲の中からnameと等しいセルを探索し、該当するゴール範囲を編集
   const alphaPlayersArray = alphaPlayersRange.getValues();

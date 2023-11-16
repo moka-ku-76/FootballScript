@@ -97,7 +97,7 @@ function whoScored(e, pageNumber = 0) {
 }
 
 //キャンセルするゴールを尋ねるクイックリプライ
-function whoseGoalCanceld(e, pageNumber = 0) {
+function whoseGoalCancel(e, pageNumber = 0) {
   const quickReplyItems = createQuickReplyItemsForCancelGoal(pageNumber);
   const messages = {
     "type": "text",

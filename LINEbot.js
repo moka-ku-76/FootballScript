@@ -127,8 +127,8 @@ async function callback(e) {
             message = '登録メンバー: \n' + members.join('\n');
             logMessage(e, message);
             break
-          case "@goalcancel":
-            whoseGoalCanceld(e)
+          case "@cancelgoal":
+            whoseGoalCancel(e)
             break
         }
       }
@@ -153,7 +153,7 @@ async function callback(e) {
             break;
           case 'CANCEL_GOAL':
             const memberCanceledGoal = splitedData;
-            goal(latestResultSheet, memberCanceledGoal);
+            cancelGoal(latestResultSheet, memberCanceledGoal);
             message = `${memberCanceledGoal} のゴールを取り消しました。`;
             logMessage(e, message);
           case 'SET_CRITERIA':
@@ -180,6 +180,8 @@ async function callback(e) {
               whoScored(e, pageNumber=pageNumber);
             } else if(previousAction === 'ADD_PARTICIPANT'){
               whoParticipate(e, pageNumber=pageNumber);
+            } else if(previousAction === 'CANCEL_GOAL'){
+              whoseGoalCancel(e, pageNumber=pageNumber);  
             }
             break;
         }
@@ -305,3 +307,13 @@ function createHelpMessage() {
   `;
 }
 
+
+function implementingMessage(e){
+  const message = bot.textMessage('実装中です');
+  bot.replyMessage(e, [message]);
+}
+
+function logMessage(e, message){
+  message = bot.textMessage(message);
+  bot.replyMessage(e, [message]);
+}

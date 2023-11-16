@@ -5,15 +5,6 @@ function testMessage(message=""){
   bot.pushMessage(testUserId, message + "OK");
 }
 
-function implementingMessage(e){
-  const message = bot.textMessage('実装中です');
-  bot.replyMessage(e, [message]);
-}
-
-function logMessage(e, message){
-  message = bot.textMessage(message);
-  bot.replyMessage(e, [message]);
-}
 
 async function testLINE() {
   const events = {
@@ -47,8 +38,7 @@ async function testLINE() {
 
 
 function testmain(){
-  const date = "2023-06-11";
+  const date = "2023-11-15";
   const sheet = ss.getSheetByName(date);
-  getMatchInfo(sheet);
-  setPool(sheet, "ポイント");
+  cancelGoal(sheet, "岡")
 }
