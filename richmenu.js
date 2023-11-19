@@ -8,12 +8,12 @@ const XPADDING = 46.2;
 const XMARGIN = 45;
 const YPADDING = 16;
 const YMARGIN = 15;
-const IMAGE_DRIVE_ID = "1013J6EQbLT07MkR9IIHN691Oy9YUU8Ls";
-// https://drive.google.com/open?id=108N_EPTXid3NB5HFqqtNHeEyJH1zQ9rq&usp=drive_fs 
-// https://drive.google.com/open?id=10WGXHY-qN0N83x_otu9Qvg9tPUb-UHyK&usp=drive_fs
-
+const IMAGE_DRIVE_ID = "11c7PMLNtGwFipqUrEUYh5GOwsxeSGbiw&usp";
+// https://drive.google.com/open?id=11c7PMLNtGwFipqUrEUYh5GOwsxeSGbiw&usp=drive_fs
+// https://drive.google.com/open?id=11drdtILZp7V7wjIDXVun1YI_n9NpF7BW&usp=drive_fs
 
 function createRichMenuA() {
+  const data_list = ["round", "goal", "finish", "rate", "pool", "info"]
   let richmenu = bot.richmenu({
     "name": "リッチメニューA",
     "barText": "メニュー（開く / 閉じる）",
@@ -28,18 +28,18 @@ function createRichMenuA() {
       "action": { "type": "postback", "data": "switchRichMenuB", "displayText": "タブB" } }),
       //上側
       bot.area({ "x": XPADDING, "y": TAB_HEIGHT + YPADDING, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "round", "displayText": "@round" } }),
+      "action": { "type": "postback", "data": data_list[0], "displayText": "@" + data_list[0] } }),
       bot.area({ "x": XPADDING + XMARGIN + AREA_WIDTH, "y": TAB_HEIGHT + YPADDING, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "goal", "displayText": "@goal" } }),
+      "action": { "type": "postback", "data": data_list[1], "displayText": "@" + data_list[1] } }),
       bot.area({ "x": XPADDING + (2 * XMARGIN) + (2 * AREA_WIDTH), "y": TAB_HEIGHT + YPADDING, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "finish", "displayText": "@finish" } }),
+      "action": { "type": "postback", "data": data_list[2], "displayText": "@" + data_list[2] } }),
       //下側
       bot.area({ "x": XPADDING, "y": TAB_HEIGHT + YPADDING + AREA_HEIGHT + YMARGIN, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "rate", "displayText": "@rate" } }),
+      "action": { "type": "postback", "data": data_list[3], "displayText": "@" + data_list[3] } }),
       bot.area({ "x": XPADDING + XMARGIN + AREA_WIDTH, "y": TAB_HEIGHT + YPADDING + AREA_HEIGHT + YMARGIN, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "pool", "displayText": "@pool" } }),
+      "action": { "type": "postback", "data": data_list[4], "displayText": "@" + data_list[4] } }),
       bot.area({ "x": XPADDING + (2 * XMARGIN) + (2 * AREA_WIDTH), "y": TAB_HEIGHT + YPADDING + AREA_HEIGHT + YMARGIN, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "info", "displayText": "@info" } }),
+      "action": { "type": "postback", "data": data_list[5], "displayText": "@" + data_list[5] } }),
     ]
   })
   let res = bot.createRichMenu(richmenu);
@@ -47,6 +47,7 @@ function createRichMenuA() {
 }
 
 function createRichMenuB() {
+  const data_list = ["helper", "cancelgoal", "restart", "changeGroupNum", "rest", "info"]
   let richmenu = bot.richmenu({
     "name": "リッチメニューB",
     "barText": "メニュー（開く / 閉じる）",
@@ -61,18 +62,18 @@ function createRichMenuB() {
       "action": { "type": "postback", "data": "switchRichMenuB", "displayText": "タブB" } }),
       //上側
       bot.area({ "x": XPADDING, "y": TAB_HEIGHT + YPADDING, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "round", "displayText": "@round" } }),
+      "action": { "type": "postback", "data": data_list[0], "displayText": "@" + data_list[0] } }),
       bot.area({ "x": XPADDING + XMARGIN + AREA_WIDTH, "y": TAB_HEIGHT + YPADDING, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "goal", "displayText": "@goal" } }),
+      "action": { "type": "postback", "data": data_list[1], "displayText": "@" + data_list[1] } }),
       bot.area({ "x": XPADDING + (2 * XMARGIN) + (2 * AREA_WIDTH), "y": TAB_HEIGHT + YPADDING, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "finish", "displayText": "@finish" } }),
+      "action": { "type": "postback", "data": data_list[2], "displayText": "@" + data_list[2] } }),
       //下側
       bot.area({ "x": XPADDING, "y": TAB_HEIGHT + YPADDING + AREA_HEIGHT + YMARGIN, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "rate", "displayText": "@rate" } }),
+      "action": { "type": "postback", "data": data_list[3], "displayText": "@" + data_list[3] } }),
       bot.area({ "x": XPADDING + XMARGIN + AREA_WIDTH, "y": TAB_HEIGHT + YPADDING + AREA_HEIGHT + YMARGIN, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "pool", "displayText": "@pool" } }),
+      "action": { "type": "postback", "data": data_list[4], "displayText": "@" + data_list[4] } }),
       bot.area({ "x": XPADDING + (2 * XMARGIN) + (2 * AREA_WIDTH), "y": TAB_HEIGHT + YPADDING + AREA_HEIGHT + YMARGIN, "width": AREA_WIDTH, "height": AREA_HEIGHT,
-      "action": { "type": "postback", "data": "info", "displayText": "@info" } }),
+      "action": { "type": "postback", "data": data_list[5], "displayText": "@" + data_list[5] } }),
     ]
   })
   let res = bot.createRichMenu(richmenu);
@@ -133,7 +134,7 @@ function switchRichMenuA(userId) {
   bot.setRichMenuToUser(userId, richMenuIdA);
 }
 
-function switchRichMenuB() {
+function switchRichMenuB(userId) {
   const richMenuIdB = ""
   bot.setRichMenuToUser(userId, richMenuIdB)
 }

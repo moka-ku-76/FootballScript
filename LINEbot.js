@@ -263,6 +263,18 @@ async function callback(e) {
               message = e.message;
             }
             break
+          case 'helper':
+            implementingMessage(e);
+            break
+          case 'restart':
+            implementingMessage(e);
+            break
+          case 'changeGroupNum':
+            implementingMessage(e);
+            break
+          case 'rest':
+            implementingMessage(e);
+            break
           }
       }
       break
