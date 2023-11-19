@@ -29,7 +29,6 @@ function MyLineBotSdk(accessToken) {
     UrlFetchApp.fetch(url, options);
   };
   
-  
   lineBotClient.quickPushMessage = function (userId, messages) {
     const url = 'https://api.line.me/v2/bot/message/push';
 
@@ -82,14 +81,12 @@ function MyLineBotSdk(accessToken) {
     UrlFetchApp.fetch(url, options);
   }
 
-
-
   lineBotClient.getUsernameFromUserId = function (e){
     const userId = e.source.userId;
     const url = 'https://api.line.me/v2/bot/profile/' + userId;
 
     const headers = {
-        'Authorization': 'Bearer ' + ACCESS_TOKEN
+        'Authorization': 'Bearer ' + this.accessToken
     };
 
     const options = {
@@ -102,6 +99,26 @@ function MyLineBotSdk(accessToken) {
     const responseJson = JSON.parse(response.getContentText());
 
     return responseJson.displayName;
+  }
+
+  lineBotClient.setRichMenuToUser = function(userId, richMenuId) {
+    // リッチメニュー設定用のURLを設定
+    const url = 'https://api.line.me/v2/bot/user/' + userId + '/richmenu/' + richMenuId;
+  
+    // リッチメニュー設定用のヘッダーを設定
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + this.accessToken
+    };
+  
+    // リッチメニュー設定用のオプションを設定
+    const options = {
+      'method': 'post',
+      'headers': headers
+    };
+  
+    // リッチメニューを設定
+    UrlFetchApp.fetch(url, options);
   }
   return lineBotClient;
 }

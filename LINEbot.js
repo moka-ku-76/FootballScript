@@ -153,8 +153,12 @@ async function callback(e) {
             break;
           case 'CANCEL_GOAL':
             const memberCanceledGoal = splitedData;
-            cancelGoal(latestResultSheet, memberCanceledGoal);
-            message = `${memberCanceledGoal} のゴールを取り消しました。`;
+            try {
+              cancelGoal(latestResultSheet, memberCanceledGoal);
+              message = `${memberCanceledGoal} のゴールを取り消しました。`;
+            } catch (e) {
+              message = e.message;
+            }
             logMessage(e, message);
           case 'SET_CRITERIA':
             if(splitedData == "STAY"){
@@ -245,7 +249,21 @@ async function callback(e) {
           case 'info':
             implementingMessage(e);
             break
-        }
+          case 'switchRichMenuA':
+            try{
+              switchRichMenuA(userId);
+            } catch(e){
+              message = e.message;
+            }
+            break
+          case 'switchRichMenuB':
+            try{
+              switchRichMenuB(userId);
+            } catch(e){
+              message = e.message;
+            }
+            break
+          }
       }
       break
   }
