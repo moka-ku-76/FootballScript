@@ -263,6 +263,9 @@ async function callback(e) {
               message = e.message;
             }
             break
+          case 'cancelgoal':
+            whoseGoalCancel(e)
+            break
           case 'helper':
             implementingMessage(e);
             break

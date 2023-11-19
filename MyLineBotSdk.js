@@ -120,6 +120,12 @@ function MyLineBotSdk(accessToken) {
     // リッチメニューを設定
     UrlFetchApp.fetch(url, options);
   }
+  
+  lineBotClient.findRichMenuIdByName = function(name) {
+    const richMenus = getRichMenuList();
+    const foundMenu = richMenus.find(menu => menu.name === name);
+    return foundMenu ? foundMenu.richMenuId : null;
+  }
   return lineBotClient;
 }
 

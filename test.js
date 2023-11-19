@@ -1,5 +1,8 @@
 const testUserId = ScriptProperties.getProperty('userID');
 
+function testRich(){
+  switchRichMenuA(testUserId)
+}
 
 function testMessage(message=""){
   bot.pushMessage(testUserId, message + "OK");
