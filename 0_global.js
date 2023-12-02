@@ -52,3 +52,7 @@ for(let i = 0; i < recordMembers.length; i++){
   const member_name = recordMembers[i];
   recordMembersMapping[member_name] = i + 1;
 }
+
+// その他
+const GRAY_CODE = '#808080';
+const WHITE_CODE = '#ffffff';

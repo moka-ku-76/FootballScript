@@ -81,7 +81,7 @@ function MyLineBotSdk(accessToken) {
     UrlFetchApp.fetch(url, options);
   }
 
-  lineBotClient.getUsernameFromUserId = function (e){
+  lineBotClient.getUsernameFromEvent = function (e){
     const userId = e.source.userId;
     const url = 'https://api.line.me/v2/bot/profile/' + userId;
 

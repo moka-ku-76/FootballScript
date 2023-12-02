@@ -1,3 +1,56 @@
+function goal(sheet, name){
+  //最新の試合記録範囲を取得
+  const finishedMatchsNumber = getFinishedMatchesNumber(sheet);
+  const latestMatchRange = sheet.getRange(finishedMatchsNumber * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfMatch);
+  //チーム、ゴール範囲を取得
+  const alphaPlayersRange = latestMatchRange.offset(1, 1, heightOfMatch - 4, 1);
+  const scoresRange = latestMatchRange.offset(1, 2, heightOfMatch - 4, 1);
+  const betaPlayersRange = latestMatchRange.offset(1, 3, heightOfMatch - 4, 1);
+  //範囲の中からnameと等しいセルを探索し、該当するゴール範囲を編集
+  const alphaPlayersArray = alphaPlayersRange.getValues();
+  const betaPlayersArray = betaPlayersRange.getValues();
+  for(let i = 0; i < alphaPlayersArray.length; i++) {
+    if(alphaPlayersArray[i][0] === name || betaPlayersArray[i][0] === name) {
+      const scoreCell = scoresRange.offset(i, 0, 1, 1);
+      let scores = scoreCell.getValue().split(",");
+      const teamIndex = alphaPlayersArray[i][0] === name ? 0 : 1;
+      scores[teamIndex] = Math.max(0, parseInt(scores[teamIndex]) + 1); // ゴール数を1増やす
+      scoreCell.setValue(scores.join(","));
+      return;
+    }
+  }
+}
+
+
+function cancelGoal(sheet, name) {
+  // 最新の試合記録範囲を取得
+  const finishedMatchsNumber = getFinishedMatchesNumber(sheet);
+  const latestMatchRange = sheet.getRange(finishedMatchsNumber * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfMatch);
+  // チーム、ゴール範囲を取得
+  const alphaPlayersRange = latestMatchRange.offset(1, 1, heightOfMatch - 4, 1);
+  const scoresRange = latestMatchRange.offset(1, 2, heightOfMatch - 4, 1);
+  const betaPlayersRange = latestMatchRange.offset(1, 3, heightOfMatch - 4, 1);
+  // 範囲の中からnameと等しいセルを探索し、該当するゴール範囲を編集
+  const alphaPlayersArray = alphaPlayersRange.getValues();
+  const betaPlayersArray = betaPlayersRange.getValues();
+
+  for(let i = 0; i < alphaPlayersArray.length; i++) {
+    if(alphaPlayersArray[i][0] === name || betaPlayersArray[i][0] === name) {
+      const scoreCell = scoresRange.offset(i, 0, 1, 1);
+      let scores = scoreCell.getValue().split(",");
+      const teamIndex = alphaPlayersArray[i][0] === name ? 0 : 1;
+      // ゴール数が0の場合は例外をスロー
+      if (parseInt(scores[teamIndex]) === 0) {
+        throw new Error(name + "のゴールは既に0です。さらに減少させることはできません。");
+      }
+      scores[teamIndex] = Math.max(0, parseInt(scores[teamIndex]) - 1); // ゴール数を1減らす
+      scoreCell.setValue(scores.join(","));
+      return;
+    }
+  }
+}
+
+
 // 誰のゴールかを尋ねるためのクイックリプライを作成する関数
 function createQuickReplyItemsForScorers(pageNumber) {
   // 開始インデックスを計算
