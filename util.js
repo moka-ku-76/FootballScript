@@ -17,3 +17,9 @@ function sumEach(array){
   }
   return num;
 }
+
+// 配列から要素をランダムに選ぶ関数
+function pickElementRandomly(array) {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}

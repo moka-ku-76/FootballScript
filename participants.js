@@ -160,7 +160,7 @@ function addParticipantsRange(sheet){
   if(widthOfParticipantsRange > participants.length){
     const error = new Error("記入されていない欄が既に存在しています。");
     error.code = "E001";
-    throw error;
+    throw new Error;
   }
 
   const currentMatchsNumber = getMatchesNumber(sheet); //現在の試合数

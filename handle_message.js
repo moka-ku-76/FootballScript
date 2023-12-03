@@ -88,6 +88,7 @@ function handleMessage(e, userId, latestResultSheet){
 				try{
 					finishMatch(latestResultSheet);
 				} catch(e){
+          console.error(e.message)
 					message = e.message;
 				}
 				logMessage(e, message);
@@ -112,6 +113,15 @@ function handleMessage(e, userId, latestResultSheet){
 				break
 			case "@cancelgoal":
 				whoseGoalCancel(e)
+				break
+			case "@restart":
+				try{
+					restartMatch(latestResultSheet);
+					message = generateMatchSummary(latestResultSheet)
+				}catch(e){
+					message = e.message;
+				}
+				logMessage(e, message);
 				break
 		}
 	}

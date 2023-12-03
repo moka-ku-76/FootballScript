@@ -41,7 +41,7 @@ function cancelGoal(sheet, name) {
       const teamIndex = alphaPlayersArray[i][0] === name ? 0 : 1;
       // ゴール数が0の場合は例外をスロー
       if (parseInt(scores[teamIndex]) === 0) {
-        throw new Error(name + "のゴールは既に0です。さらに減少させることはできません。");
+        throw new Error(name + "のゴール数は0です。");
       }
       scores[teamIndex] = Math.max(0, parseInt(scores[teamIndex]) - 1); // ゴール数を1減らす
       scoreCell.setValue(scores.join(","));

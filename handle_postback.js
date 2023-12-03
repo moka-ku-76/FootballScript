@@ -41,9 +41,18 @@ function handlePostback(e, userId, latestResultSheet){
 				}
 				logMessage(e, message);
 				break
+			case 'SELECT_SUBSTITUTE':
+				let substitutePlayer = splitedData;
+				try{
+					setSubstitutePlayer(latestResultSheet, substitutePlayer);
+					message = generateMatchSummary(latestResultSheet)
+				} catch(e){
+					message = e.message;
+				}
+				logMessage(e, message)
 			case 'NEXT_PAGE':
 				let pageNumber = Number(splitedData);
-				// 'SCORED_GOAL'または'ADD_PARTICIPANT'のどちらから来たかを判断するための追加情報が必要
+				// 前のアクションを取得
 				let previousAction = data.split(':')[2];
 				if(previousAction === 'SCORED_GOAL'){
 					whoScored(e, pageNumber=pageNumber);
@@ -51,6 +60,8 @@ function handlePostback(e, userId, latestResultSheet){
 					whoParticipate(e, pageNumber=pageNumber);
 				} else if(previousAction === 'CANCEL_GOAL'){
 					whoseGoalCancel(e, pageNumber=pageNumber);  
+				} else if(previousAction === 'SELECT_SUBSTITUTE'){
+					whoIsSubstitutePlayer(e, latestResultSheet, pageNumber=pageNumber)
 				}
 				break;
 		}
@@ -92,16 +103,14 @@ function handlePostback(e, userId, latestResultSheet){
 				try{
 					finishMatch(latestResultSheet);
 				} catch(e){
+          console.error(e.message)
 					message = e.message;
 				}
 				logMessage(e, message);
 				break
 			case 'rate':
-				const currentRate = getCurrentRate(latestResultSheet);
-				const rate = (currentRate + 1) % 6;
 				try{
-					setRate(latestResultSheet, rate);
-					message = `レートを${rate}に変更しました。`;
+          message = incrementRate(latestResultSheet);
 				} catch(e){
 					message = e.message;
 				}
@@ -132,10 +141,16 @@ function handlePostback(e, userId, latestResultSheet){
 				whoseGoalCancel(e)
 				break
 			case 'helper':
-				implementingMessage(e);
+				whoIsSubstitutePlayer(e, latestResultSheet);
 				break
 			case 'restart':
-				implementingMessage(e);
+				try{
+					restartMatch(latestResultSheet);
+					message = generateMatchSummary(latestResultSheet)
+				}catch(e){
+					message = e.message;
+				}
+				logMessage(e, message);
 				break
 			case 'changeGroupNum':
 				implementingMessage(e);

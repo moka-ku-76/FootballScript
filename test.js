@@ -1,5 +1,36 @@
 const testUserId = ScriptProperties.getProperty('userID');
 
+const eventObjectSample = {
+  "events": [
+    {
+      "type": "postback",
+      "replyToken": "nHuyWiB7yP5Zw52FIkcQobQuGDXCTA",
+      "source": {
+        "userId": testUserId,
+        "type": "user"
+      },
+      "timestamp": 1462629479859,
+      "postback": {
+        "data": "helper",
+        "params": {
+          "datetime": "2017-09-03T15:00",
+          "date": "2017-09-03"
+        }
+      }
+    }
+  ]
+}
+
+function testmain(){
+  const date = "2023-11-15";
+  const sheet = ss.getSheetByName(date);
+  // const e = eventObjectSample[0]
+  // console.log(eventObjectSample.events[0])
+  handlePostback(eventObjectSample.events[0], testUserId, sheet)
+  // cancelGoal(sheet, "岡")
+}
+
+
 function testRich(){
   switchRichMenuA(testUserId)
 }
@@ -40,8 +71,3 @@ async function testLINE() {
 }
 
 
-function testmain(){
-  const date = "2023-11-15";
-  const sheet = ss.getSheetByName(date);
-  cancelGoal(sheet, "岡")
-}

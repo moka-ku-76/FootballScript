@@ -3,7 +3,7 @@ function createDatedResultSheet(dateString){
     let sheet_name = dateString;
   
     if(ss.getSheetByName(sheet_name) !== null) {
-      throw Error("シートは既に存在しています");
+      throw new Error("シートは既に存在しています");
     }
   
     let newSheet = tmpSheet.copyTo(ss);

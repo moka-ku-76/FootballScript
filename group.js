@@ -141,7 +141,7 @@ function setPool(sheet, criteria="", excludedParticipants=[]){
     }
     const poolCriteria = poolCriteriaCell.getValue();
     if(!poolCriteria){
-      throw Error("基準が入力されていません");
+      throw new Error("基準が入力されていません");
     }
     const deviationValues = recordDataVertical[recordHeaderMapping[poolCriteria]];
     let participants = getParticipants(sheet);

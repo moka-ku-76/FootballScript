@@ -86,7 +86,13 @@ function implementingMessage(e){
   bot.replyMessage(e, [message]);
 }
 
+// function logMessage(e, message){
+//   message = bot.textMessage(message);
+//   bot.replyMessage(e, [message]);
+// }
+
 function logMessage(e, message){
-  message = bot.textMessage(message);
-  bot.replyMessage(e, [message]);
+  testMessage(message)
 }
+
+
