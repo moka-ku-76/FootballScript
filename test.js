@@ -22,12 +22,14 @@ const eventObjectSample = {
 }
 
 function testmain(){
-  const date = "2023-11-15";
+  const date = "2023-12-09";
   const sheet = ss.getSheetByName(date);
   // const e = eventObjectSample[0]
   // console.log(eventObjectSample.events[0])
-  handlePostback(eventObjectSample.events[0], testUserId, sheet)
+  // handlePostback(eventObjectSample.events[0], testUserId, sheet)
   // cancelGoal(sheet, "岡")
+  const info = createDailySummary(sheet)
+  console.log(info)
 }
 
 

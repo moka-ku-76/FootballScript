@@ -1,7 +1,7 @@
 function goal(sheet, name){
   //最新の試合記録範囲を取得
-  const finishedMatchsNumber = getFinishedMatchesNumber(sheet);
-  const latestMatchRange = sheet.getRange(finishedMatchsNumber * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfMatch);
+  const numOfFinshedMatches = getNumOfFinishedMatches(sheet);
+  const latestMatchRange = sheet.getRange(numOfFinshedMatches * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfMatch);
   //チーム、ゴール範囲を取得
   const alphaPlayersRange = latestMatchRange.offset(1, 1, heightOfMatch - 4, 1);
   const scoresRange = latestMatchRange.offset(1, 2, heightOfMatch - 4, 1);
@@ -21,11 +21,10 @@ function goal(sheet, name){
   }
 }
 
-
 function cancelGoal(sheet, name) {
   // 最新の試合記録範囲を取得
-  const finishedMatchsNumber = getFinishedMatchesNumber(sheet);
-  const latestMatchRange = sheet.getRange(finishedMatchsNumber * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfMatch);
+  const numOfFinshedMatches = getNumOfFinishedMatches(sheet);
+  const latestMatchRange = sheet.getRange(numOfFinshedMatches * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfMatch);
   // チーム、ゴール範囲を取得
   const alphaPlayersRange = latestMatchRange.offset(1, 1, heightOfMatch - 4, 1);
   const scoresRange = latestMatchRange.offset(1, 2, heightOfMatch - 4, 1);
@@ -50,12 +49,10 @@ function cancelGoal(sheet, name) {
   }
 }
 
-
 // 誰のゴールかを尋ねるためのクイックリプライを作成する関数
 function createQuickReplyItemsForScorers(pageNumber) {
   // 開始インデックスを計算
   const startIndex = pageNumber * MAX_QUICK_REPLY_ITEMS;
-
   const latestResultSheetName = getLatestResultSheetName();
   const latestResultSheet = ss.getSheetByName(latestResultSheetName);
   const matchInfo = getMatchInfo(latestResultSheet);
@@ -89,7 +86,6 @@ function createQuickReplyItemsForScorers(pageNumber) {
       }
     });
   }
-
   return quickReplyItems;
 }
 

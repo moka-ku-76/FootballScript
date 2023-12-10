@@ -36,8 +36,8 @@ function onEdit(e){
     
     if ( column == 2){
       //試合追加処理
-      const matchsNumber = Number(e.value);
-      makeMatchRange(targetSheet, matchsNumber);
+      const numOfMatchesNumber = Number(e.value);
+      makeMatchRange(targetSheet, numOfMatchesNumber);
 
     }
     if ( column == 3){
@@ -49,7 +49,7 @@ function onEdit(e){
   //試合結果入力シートの監視
   if (activeSheet.getIndex() > 5){
     //グループ分けに使う
-    let startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getMatchesNumber(activeSheet);
+    let startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getNumOfMatches(activeSheet);
     let groupMakerRange = activeSheet.getRange(startRowOfGroupMakerRange, startColumnOfGroupMakerRange, heightOfGroupMaker, widthOfGroupMaker);
     const poolTriggerCell = groupMakerRange.offset(1, 4, 1, 1);
     const shuffleTriggerCell = groupMakerRange.offset(12, 0, 1, 1);
@@ -91,7 +91,7 @@ function onEdit(e){
     }
     if(applyTriggerCell.isChecked()){
       applyResultToSheet(activeSheet);
-      startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getMatchesNumber(activeSheet);
+      startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getNumOfMatches(activeSheet);
       groupMakerRange = activeSheet.getRange(startRowOfGroupMakerRange, startColumnOfGroupMakerRange, heightOfGroupMaker, widthOfGroupMaker);
       applyTriggerCell = groupMakerRange.offset(12, 1, 1, 1);
       applyIsChecked = applyTriggerCell.isChecked();

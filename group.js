@@ -1,7 +1,7 @@
 ////チーム作成に使う関数
 //組み合わせを求める関数。チーム作成で使う。
 function groupMaker(sheet){
-    const startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getMatchesNumber(sheet);
+    const startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getNumOfMatches(sheet);
     const groupMakerRange = sheet.getRange(startRowOfGroupMakerRange, startColumnOfGroupMakerRange, heightOfGroupMaker, widthOfGroupMaker);
     //分割するチーム数を決定
     const groupsNumber = groupMakerRange.offset(1,1,1,1).getValue();
@@ -34,45 +34,6 @@ function groupMaker(sheet){
     setValuesInOrder(sheet, groupDisplayRange, nameArray);
 }
 
-function countPairs(n) {
-    return factorial(n) / (factorial(2) * factorial(n - 2));
-}
-  
-function factorial(n) {
-    if (n === 0) {
-        return 1;
-    } else {
-        return n * factorial(n - 1);
-    }
-}
-
-// グループ分け
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
-function splitArrayRandomly(array, chunkCount) {
-    let chunks = [];
-    let chunkSize = Math.floor(array.length / chunkCount);
-    let size;
-    // Logger.log("size " + chunkSize)
-    let remainder = array.length % chunkCount;
-    // Logger.log(remainder)
-    array = shuffleArray(array);
-    for (let i = 0; i < array.length; i += size) {
-        size = chunkSize;
-        if (remainder > 0) {
-        size += 1;
-        remainder -= 1;
-        }
-        chunks.push(array.slice(i, i + size));
-    }
-    return chunks;
-}
 
 function setValuesInOrder(sheet, range, values) {
     const startRow = range.getRow();
@@ -95,7 +56,7 @@ function setValuesInOrder(sheet, range, values) {
 }
 
 function getPoolInfo(sheet){
-    const startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getMatchesNumber(sheet);
+    const startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getNumOfMatches(sheet);
     const groupMakerRange = sheet.getRange(startRowOfGroupMakerRange, startColumnOfGroupMakerRange, heightOfGroupMaker, widthOfGroupMaker);
     let poolInfo = []
   
@@ -123,7 +84,7 @@ function getPoolInfo(sheet){
 }
   
 function getPoolCriteria(sheet){
-    const startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getMatchesNumber(sheet);
+    const startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getNumOfMatches(sheet);
     const groupMakerRange = sheet.getRange(startRowOfGroupMakerRange, startColumnOfGroupMakerRange, heightOfGroupMaker, widthOfGroupMaker);
   
     const poolCriteria = groupMakerRange.offset(1,3,1,1).getValue();
@@ -131,7 +92,7 @@ function getPoolCriteria(sheet){
 }
 
 function setPool(sheet, criteria="", excludedParticipants=[]){
-    const startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getMatchesNumber(sheet);
+    const startRowOfGroupMakerRange = offsetRowOfGroupMakerRange + getNumOfMatches(sheet);
     const groupMakerRange = sheet.getRange(startRowOfGroupMakerRange, startColumnOfGroupMakerRange, heightOfGroupMaker, widthOfGroupMaker);
   
     const poolCriteriaCell = groupMakerRange.offset(1, 3, 1, 1);

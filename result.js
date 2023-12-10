@@ -1,4 +1,4 @@
-// 
+// 勝敗・引き分けをカウント
 function countResult(array){
   let positive = 0;
   let negative = 0;
@@ -24,9 +24,9 @@ function countResult(array){
   
 function countGoals(sheet){
   let goals = {};  //プレイヤーごとのゴール数を格納するオブジェクト
-  const finishedMatchsNumber = getFinishedMatchesNumber(sheet);  //終了した試合数。データを取得する範囲で使用
-  console.log(finishedMatchsNumber);
-  const values = sheet.getRange(1, 2, finishedMatchsNumber * heightOfMatch, 3).getValues();  //選手名とゴールのデータ
+  const numOfFinshedMatches = getNumOfFinishedMatches(sheet);  //終了した試合数。データを取得する範囲で使用
+  console.log(numOfFinshedMatches);
+  const values = sheet.getRange(1, 2, numOfFinshedMatches * heightOfMatch, 3).getValues();  //選手名とゴールのデータ
 
   values.forEach((row) => {
       if(row[1] && row[1].includes(",")){
@@ -58,11 +58,11 @@ function inputRecordEachDay(){
       return;
     }
 
-    const matchCount = getMatchesNumber(targetSheet);
-    const participantCount = getParticipantsNumber(targetSheet);
+    const numOfMatches = getNumOfMatches(targetSheet);
+    const numOfParticipants = getNumOfParticipants(targetSheet);
     const participants = getParticipants(targetSheet);
 
-    let pointResults = targetSheet.getRange(3, 7, matchCount, participantCount).getValues();
+    let pointResults = targetSheet.getRange(3, 7, numOfMatches, numOfParticipants).getValues();
     pointResults = transpose(pointResults);
 
     const goalsByParticipant = countGoals(targetSheet);
@@ -102,4 +102,31 @@ function inputRecordEachDay(){
   const pointsColumnIndex = 6; 
   const ascending = false;
   recordRange.sort([{column: pointsColumnIndex, ascending: ascending}]);
+}
+
+
+function getDailyRecords(sheet) {
+  let recordByParticipant = {};
+  const numOfMatches = getNumOfMatches(sheet);
+  const numOfParticipants = getNumOfParticipants(sheet);
+  const participants = getParticipants(sheet);
+
+  // 試合結果と得点の範囲を取得
+  let pointResults = sheet.getRange(3, 7, numOfMatches, numOfParticipants).getValues();
+  pointResults = transpose(pointResults); // 縦横変換
+
+  // 各参加者のゴール数を集計
+  const goalsByParticipant = countGoals(sheet);
+
+  // 各参加者の記録を集計
+  participants.forEach((participant, index) => {
+    let pointResult = pointResults[index];
+    let matchResult = countResult(pointResult); // 試合結果の集計
+    // 合計試合数、勝利数、敗北数、引き分け数、得点数、ゴール数
+    let record = [sumEach(matchResult), matchResult[0], matchResult[1], matchResult[2], sumEach(pointResult), goalsByParticipant[participant]];
+
+    recordByParticipant[participant] = record;
+  });
+
+  return recordByParticipant;
 }

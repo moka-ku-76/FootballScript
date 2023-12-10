@@ -1,28 +1,31 @@
-//現在の名前が入力された参加者の人数
-function getParticipantsNumber(sheet){
-  const firstParticipantsCell = sheet.getRange(startRowOfParticipantsRange, startColumnOfParticipantsRange);
-  if(!firstParticipantsCell.getValue()){
-    return 0;
-  } else if ( !firstParticipantsCell.offset(0, 1).getValue()){
-    return 1;
-  }
-  let lastParticipantsCell = firstParticipantsCell.getNextDataCell(SpreadsheetApp.Direction.NEXT);
-  lastParticipantsCell = sheet.getRange(1,lastParticipantsCell.getColumn());
-  const participantsNumber = lastParticipantsCell.getValue();
-  return participantsNumber;
-}
-
-
-//現在の参加者の名前リストを取得
+// 現在の参加者の名前リストを取得
 function getParticipants(sheet){
-  const num_columns = getParticipantsNumber(sheet);
-  if(num_columns == 0){
+  const firstParticipantsCell = sheet.getRange(startRowOfParticipantsRange, startColumnOfParticipantsRange);
+  let lastParticipantsCell = firstParticipantsCell.getNextDataCell(SpreadsheetApp.Direction.NEXT);
+  let num_columns;
+
+  if(lastParticipantsCell.getRow() > startRowOfParticipantsRange) {
+    // 次のデータセルが次の行にある場合、参加者はいません。
+    num_columns = 0;
+  } else {
+    // 参加者が存在する場合
+    num_columns = lastParticipantsCell.getColumn() - startColumnOfParticipantsRange + 1;
+  }
+
+  if(num_columns === 0){
     return [];
   }
+
   const num_rows = 1;
   const participantsRange = sheet.getRange(startRowOfParticipantsRange, startColumnOfParticipantsRange, num_rows, num_columns);
   const participants = participantsRange.getValues()[0];
   return participants;
+}
+
+// 参加者人数を取得
+function getNumOfParticipants(sheet){
+  const participants = getParticipants(sheet);
+  return participants.length;
 }
 
 //予定されている参加者の人数
@@ -155,51 +158,55 @@ function addParticipantsFromList(latestResultSheet, membersListToAdd){
 //参加者の枠を一つ追加する関数
 function addParticipantsRange(sheet){
   ////既に空白の範囲が存在していれば処理を終了
-  const participants = getParticipants(sheet);　//参加者を取得
+  const numOfParticipants = getNumOfParticipants(sheet);　//参加者を取得
+
+  // const participants = getParticipants(sheet);　//参加者を取得
   const widthOfParticipantsRange = getWidthOfParticipantRange(sheet);　//参加者範囲の長さを取得
-  if(widthOfParticipantsRange > participants.length){
+  if(widthOfParticipantsRange > numOfParticipants){
     const error = new Error("記入されていない欄が既に存在しています。");
     error.code = "E001";
     throw new Error;
   }
 
-  const currentMatchsNumber = getMatchesNumber(sheet); //現在の試合数
-  const currentParticipantsNumber = getWidthOfParticipantRange(sheet); //現在の参加枠の列数
+  const numOfMatches = getNumOfMatches(sheet); //現在の試合数
   const header = 2; //ヘッダーの行数
   const footer = 3; //フッターの行数
 
-  const srcCheckCell = sheet.getRange(startRowOfResultRange + header + currentMatchsNumber, startColumnOfResultRange + currentParticipantsNumber + 1, 2, 1);
+  const srcCheckCell = sheet.getRange(startRowOfResultRange + header + numOfMatches, startColumnOfResultRange + widthOfParticipantsRange + 1, 2, 1);
   const dstCheckCell = srcCheckCell.offset(0, 1, srcCheckCell.getNumRows(), srcCheckCell.getNumColumns());
   srcCheckCell.moveTo(dstCheckCell);
   srcCheckCell.clearFormat();
 
-  const srcRange = sheet.getRange(startRowOfResultRange, startColumnOfResultRange + currentParticipantsNumber, header + currentMatchsNumber + footer, 1);
+  const srcRange = sheet.getRange(startRowOfResultRange, startColumnOfResultRange + widthOfParticipantsRange, header + numOfMatches + footer, 1);
   const targetRange = srcRange.offset(0, 1, srcRange.getNumRows(), srcRange.getNumColumns());
   targetRange.clearDataValidations();
   srcRange.copyTo(targetRange);
   targetRange.offset(1,0,1, 1).clearContent() //名前のセルだけクリア
 }
 
-function setParticipants(sheet, name){
+function setParticipant(sheet, name) {
+  // 現在の参加者リストを取得し、重複参加をチェック
   const currentParticipants = getParticipants(sheet);
-  console.log(currentParticipants)
-  if(currentParticipants.includes(name)){
+  if (currentParticipants.includes(name)) {
     throw new Error(name + "は既に参加しています。");
   }
-  const currentMatchsNumber = getMatchesNumber(sheet); //現在の試合数
-  const currentParticipantsNumber = getWidthOfParticipantRange(sheet); //現在の参加枠の列数
-  const header = 2; //ヘッダーの行数
-  const footer = 3; //フッターの行数
-  const targetRange = sheet.getRange(startRowOfResultRange, startColumnOfResultRange + currentParticipantsNumber, header + currentMatchsNumber + footer, 1);
-  //名前のセルにnameをセット
-  targetRange.offset(1,0,1, 1).setValue(name);
+
+  // 現在の参加者枠の最終列を取得
+  const currentParticipantsNumber = getWidthOfParticipantRange(sheet); 
+
+  // 名前を設定するセルの範囲を特定
+  const nameCell = sheet.getRange(startRowOfParticipantsRange, startColumnOfParticipantsRange + currentParticipantsNumber);
+
+  // 名前のセルに参加者名をセット
+  nameCell.setValue(name);
 }
+
 
 function addAndSetParticipants(sheet, name){
   try {
     addParticipantsRange(sheet);
   } catch (e) {
-    // エラーコードが 'E001' の場合のみ setParticipants を実行
+    // エラーコードが 'E001' の場合のみ setParticipant を実行
     if (e.code === 'E001') {
       console.warn(`エラーコード ${e.code} :` + e.message);
     } else {
@@ -208,14 +215,14 @@ function addAndSetParticipants(sheet, name){
     }
   }
 
-  // エラーが発生しなかった場合も setParticipants を実行
-  setParticipants(sheet, name);  
+  // エラーが発生しなかった場合も setParticipant を実行
+  setParticipant(sheet, name);  
 }
 
 
 function deleteParticipantsRange(sheet){
   //現在の試合数
-  const currentMatchsNumber = getMatchesNumber(sheet);
+  const numOfMatches = getNumOfMatches(sheet);
   //現在の参加枠の列数
   const currentParticipantsNumber = getWidthOfParticipantRange(sheet);
   //ヘッダーの行数
@@ -223,17 +230,18 @@ function deleteParticipantsRange(sheet){
   //フッターの行数
   const footer = 3;
 
-  const srcCheckCell = sheet.getRange(startRowOfResultRange + header + currentMatchsNumber, startColumnOfResultRange + currentParticipantsNumber + 1, 2, 1);
+  const srcCheckCell = sheet.getRange(startRowOfResultRange + header + numOfMatches, startColumnOfResultRange + currentParticipantsNumber + 1, 2, 1);
   const dstCheckCell = srcCheckCell.offset(0, -1, srcCheckCell.getNumRows(), srcCheckCell.getNumColumns());
   srcCheckCell.moveTo(dstCheckCell);
   srcCheckCell.clearFormat();
 
-  let targetRange = sheet.getRange(startRowOfResultRange, startColumnOfResultRange + currentParticipantsNumber, header + currentMatchsNumber, 1);
+  let targetRange = sheet.getRange(startRowOfResultRange, startColumnOfResultRange + currentParticipantsNumber, header + numOfMatches, 1);
   targetRange.clear();
   targetRange.clearDataValidations();
-  targetRange.offset(header + currentMatchsNumber + 2, 0, 1, 1).clear();
-  targetRange.offset(header + currentMatchsNumber + 2, 0, 1, 1).clearDataValidations();
+  targetRange.offset(header + numOfMatches + 2, 0, 1, 1).clear();
+  targetRange.offset(header + numOfMatches + 2, 0, 1, 1).clearDataValidations();
 }
+
 
 function registerMember(profileName, userId) {
   return new Promise((resolve, reject) => {

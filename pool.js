@@ -1,8 +1,6 @@
 function createQuickReplyItemsForMakePool(pageNumber) {
   // 開始インデックスを計算
   const startIndex = pageNumber * MAX_QUICK_REPLY_ITEMS;
-
-  
   // 記録のカラム一覧を取得
   const recordLastColumn = recordSheet.getLastColumn();
   let recordMetric = recordSheet.getRange(2, 2, 1, recordLastColumn - 1).getValues()[0];
@@ -32,15 +30,6 @@ function createQuickReplyItemsForMakePool(pageNumber) {
       data: `SET_CRITERIA:STAY`, // アクションタイプと指標をポストバックデータに含める
     }
   });
-
-  // quickReplyItems.push({
-  //   type: 'action',
-  //   action: {
-  //     type: 'postback',
-  //     label: '今日の調子',
-  //     data: `SET_CRITERIA:今日の調子`, // アクションタイプと指標をポストバックデータに含める
-  //   }
-  // });
 
   // もしまだ指標があれば、'次のページ'ボタンを追加
   if (startIndex + MAX_QUICK_REPLY_ITEMS < recordMetric.length) {
