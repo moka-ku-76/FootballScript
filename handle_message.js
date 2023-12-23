@@ -39,19 +39,20 @@ function handleMessage(e, userId, latestResultSheet){
 			case "@pool":
 				if(optionalData){
 					let criteria = optionalData;
-					let excludedParticipants = [];
+					let restingParticipants = [];
 					if(optionalData2){
-						excludedParticipants = optionalData2.split('、');
+						restingParticipants = optionalData2.split('、');
 					}
 					try{
-						setPool(latestResultSheet, criteria=criteria, excludedParticipants=excludedParticipants);
+						setPool(latestResultSheet, criteria=criteria, restingParticipants=restingParticipants);
 						message = `${criteria}を元にプールを作成しました。\n`
 						const poolInfo = getPoolInfo(latestResultSheet);
-						message += poolInfo;
+						const poolInfoMessage = createPoolInfoMessage(poolInfo);
+						message += poolInfoMessage;
 					}catch(e){
 						message = e.message;
 					};
-					message = getPoolInfo(latestResultSheet);
+					// message = createPoolInfoMessage(latestResultSheet);
 					logMessage(e, message);
 				}else{
 					let currentCriteria = getPoolCriteria(latestResultSheet);

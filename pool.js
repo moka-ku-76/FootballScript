@@ -1,3 +1,97 @@
+function getPoolInfo(sheet) {
+  const groupMakerRange = getGroupMakerRange(sheet);
+  
+  const poolCriteria = groupMakerRange.offset(1,3,1,1).getValue();
+  const readyPlayers = groupMakerRange.offset(2,3,10,3).getValues();
+
+  return {
+    criteria: poolCriteria,
+    readyPlayers: readyPlayers
+  };
+}
+
+
+function getPoolCriteria(sheet) {
+  const poolInfo = getPoolInfo(sheet);
+  return poolInfo.criteria;
+}
+
+
+async function setPool(sheet, criteria="", restingParticipants=[]){
+  // 範囲を取得
+  const groupMakerRange = getGroupMakerRange(sheet)
+  // 基準
+  const poolCriteria = await setOrGetCriteria(groupMakerRange, criteria);
+  // プールに含めるメンバー
+  const participants = getParticipants(sheet);
+  const readyParticipants = filterParticipants(participants, restingParticipants);
+
+  const sortedParticipants = sortParticipantsByCriteria(readyParticipants, poolCriteria)
+
+  //チーム数取得
+  const groupsNumber = groupMakerRange.offset(1,1,1,1).getValue();
+  const poolsData = splitIntoPools(sortedParticipants, groupsNumber);
+
+  writePoolsToSheet(groupMakerRange, poolsData);
+}
+
+
+async function setOrGetCriteria(groupMakerRange, criteria) {
+  const poolCriteriaCell = groupMakerRange.offset(1, 3, 1, 1);
+  if (criteria) {
+      // 非同期で基準をセット
+      await poolCriteriaCell.setValue(criteria);
+      return criteria;
+  } else {
+      // 既存の基準を取得
+      return poolCriteriaCell.getValue();
+  }
+}
+
+
+function filterParticipants(participants, restingParticipants) {
+  return restingParticipants.length > 0 ? 
+         participants.filter(participant => !restingParticipants.includes(participant)) : 
+         participants;
+}
+
+
+function sortParticipantsByCriteria(participants, criteria) {
+  const deviationValues = recordDataVertical[recordHeaderMapping[criteria]];
+  return participants.slice().sort((a, b) => deviationValues[recordMembersMapping[b]] - deviationValues[recordMembersMapping[a]]);
+}
+
+
+function splitIntoPools(sortedParticipants, groupsNumber) {
+  const pool1 = sortedParticipants.slice(0, groupsNumber);
+  const pool2 = sortedParticipants.slice(groupsNumber, 3 * groupsNumber);
+  const pool3 = sortedParticipants.slice(3 * groupsNumber);
+  return [pool1, pool2, pool3].map(pool => Array.from({ length: 10 }, (_, i) => [pool[i] || '']));
+}
+
+
+function writePoolsToSheet(groupMakerRange, poolsData) {
+  const combinedData = poolsData[0].map((_, i) => poolsData.map(pool => pool[i][0]));
+  groupMakerRange.offset(3, 3, 10, 3).setValues(combinedData);
+}
+
+
+function createPoolInfoMessage(poolInfo){
+  let poolMessage = `基準：${poolInfo.criteria}\n`;
+
+  // 各列 (プール) についてループ
+  for (let col = 0; col < 3; col++) {
+    for (let row = 0; row < poolInfo.readyPlayers.length; row++) {
+      if (poolInfo.readyPlayers[row][col] !== "") {
+        poolMessage += poolInfo.readyPlayers[row][col] + '\n';
+      }
+    }
+    poolMessage += '---\n'; // プール間のセパレータ
+  }
+
+  return poolMessage;
+}
+
 function createQuickReplyItemsForMakePool(pageNumber) {
   // 開始インデックスを計算
   const startIndex = pageNumber * MAX_QUICK_REPLY_ITEMS;

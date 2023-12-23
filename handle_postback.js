@@ -27,14 +27,15 @@ function handlePostback(e, userId, latestResultSheet){
 				logMessage(e, message);
 			case 'SET_CRITERIA':
 				if(splitedData == "STAY"){
-					message = getPoolInfo(latestResultSheet);
+					message = createPoolInfoMessage(latestResultSheet);
 				}else{
 					let criteria = splitedData;
 					try{
 						setPool(latestResultSheet, criteria=criteria);
 						message = `${criteria}を元にプールを作成しました。\n`
 						const poolInfo = getPoolInfo(latestResultSheet);
-						message += poolInfo;
+						const poolInfoMessage = createPoolInfoMessage(poolInfo);
+						message += poolInfoMessage;
 					}catch(e){
 						message = e.message;
 					}
@@ -121,7 +122,12 @@ function handlePostback(e, userId, latestResultSheet){
 				howMakePool(e, currentCriteria);
 				break
 			case 'info':
-				implementingMessage(e);
+				try{
+          message = createDailySummary(latestResultSheet);
+        } catch(e){
+          message = e.message;
+        }
+        logMessage(e, message)
 				break
 			case 'switchRichMenuA':
 				try{
