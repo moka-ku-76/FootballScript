@@ -94,25 +94,30 @@ function createDailySummary(sheet) {
   let summary = date + "\n"
   summary += `試合数：${numOfMatches}\n`
   summary += `参加者：${numOfParticipants}名\n`
+  summary += '\n'
   summary += "勝率BEST3\n"
   summary += winRateBest3.map(item => {
-    return `${item.participant}： ${(item.winRate * 100).toFixed(2)}%\n`;
+    return `  ${item.participant}： ${item.fraction}  ${(item.winRate * 100).toFixed(2)}%\n`;
   }).join('');
+  summary += '\n'
   summary += "勝率WORST3\n"
   summary += winRateWorst3.map(item => {
-    return `${item.participant}： ${(item.winRate * 100).toFixed(2)}%\n`;
+    return `  ${item.participant}： ${item.fraction}  ${(item.winRate * 100).toFixed(2)}%\n`;
   }).join('');
+  summary += '\n'
   summary += "賞金BEST3\n"
   summary += pointsBest3.map(item => {
-    return `${item.participant}： ${item.points}\n`;
+    return `  ${item.participant}： ${item.points}\n`;
   }).join('');
+  summary += '\n'
   summary += "賞金WORST3\n"
   summary += pointsWorst3.map(item => {
-    return `${item.participant}： ${item.points}\n`;
+    return `  ${item.participant}： ${item.points}\n`;
   }).join('');
+  summary += '\n'
   summary += "ゴール数BEST3\n"
   summary += goalsTop3.map(item => {
-    return `${item.participant}： ${item.goals}\n`;
+    return `  ${item.participant}： ${item.goals}\n`;
   }).join('')
 
   return summary
