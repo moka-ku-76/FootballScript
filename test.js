@@ -11,7 +11,7 @@ const eventObjectSample = {
       },
       "timestamp": 1462629479859,
       "postback": {
-        "data": "helper",
+        "data": "info",
         "params": {
           "datetime": "2017-09-03T15:00",
           "date": "2017-09-03"
@@ -26,10 +26,10 @@ function testmain(){
   const sheet = ss.getSheetByName(date);
   // const e = eventObjectSample[0]
   // console.log(eventObjectSample.events[0])
-  // handlePostback(eventObjectSample.events[0], testUserId, sheet)
+  handlePostback(eventObjectSample.events[0], testUserId, sheet)
   // cancelGoal(sheet, "岡")
-  const info = createDailySummary(sheet)
-  console.log(info)
+  // const info = createDailySummary(sheet)
+  // console.log(info)
 }
 
 
@@ -67,7 +67,7 @@ async function testLINE() {
   let criteria = "ポイント";
   setPool(latestResultSheet, criteria = criteria);
   message = `${criteria}を元にプールを作成しました。\n`;
-  const poolInfo = getPoolInfo(latestResultSheet);
+  const poolInfo = createPoolInfoMessage(latestResultSheet);
   message += poolInfo;
   console.log(message);
 }
