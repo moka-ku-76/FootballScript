@@ -29,6 +29,7 @@ const offsetRowOfGroupMakerRange = 8; //オフセット + 試合数がGroupMaker
 const startColumnOfGroupMakerRange = 6;
 const heightOfGroupMaker = 13; //テンプレートの高さ
 const widthOfGroupMaker = 6;  //テンプレートの幅
+const numOfPools = 3;
 
 ////リザルトエリア
 const startRowOfResultRange = 1;
