@@ -17,6 +17,14 @@ function getPoolCriteria(sheet) {
 }
 
 
+function getReadyParticipants(sheet){
+  const groupMakerRange = getGroupMakerRange(sheet)
+  const readyParticipantsRange = groupMakerRange.offset(3, 3, 10, 3)
+  const readyParticipants = readyParticipantsRange.getValues()
+
+}
+
+
 async function setPool(sheet, criteria="", restingParticipants=[]){
   // 範囲を取得
   const groupMakerRange = getGroupMakerRange(sheet)

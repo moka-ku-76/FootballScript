@@ -50,24 +50,24 @@ function getLatestResultSheetName(){
 }
 
 // デイリーの情報を返す関数
-function getDailyInfo(sheet){
-  // 日にち
-  const date = sheet.getName();
-  // 試合数
-  const numOfMatches = getNumOfMatches(sheet)
-  // 参加人数
-  const numOfparticipants = getNumOfParticipants(sheet);
-  // 選手ごとのゴール数
-  const goalsByParticipant = countGoals(sheet);
-  // 選手ごとの勝ち、負け、引き分け、勝ち点、勝率
-  const recordByParticipant = getDailyRecords(sheet);
-  // 選手ごとのポイント
-  return {
-    "date": date,
-    "numOfMatches": numOfMatches,
-    "numOfparticipants": numOfparticipants,
-  }
-}
+// function getDailyInfo(sheet){
+//   // 日にち
+//   const date = sheet.getName();
+//   // 試合数
+//   const numOfMatches = getNumOfMatches(sheet)
+//   // 参加人数
+//   const numOfparticipants = getNumOfParticipants(sheet);
+//   // 選手ごとのゴール数
+//   const goalsByParticipant = countGoals(sheet);
+//   // 選手ごとの勝ち、負け、引き分け、勝ち点、勝率
+//   const recordByParticipant = getDailyRecords(sheet);
+//   // 選手ごとのポイント
+//   return {
+//     "date": date,
+//     "numOfMatches": numOfMatches,
+//     "numOfparticipants": numOfparticipants,
+//   }
+// }
 
 
 function getDailyInfo(sheet) {

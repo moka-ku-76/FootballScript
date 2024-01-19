@@ -59,6 +59,14 @@ function handleMessage(e, userId, latestResultSheet){
 					howMakePool(e, currentCriteria);
 				};
 				break
+			case "@info":
+				try{
+          message = createDailySummary(latestResultSheet);
+        } catch(e){
+          message = e.message;
+        }
+        logMessage(e, message)
+				break
 			case "@round":
 				try{
 					groupMaker(latestResultSheet);
