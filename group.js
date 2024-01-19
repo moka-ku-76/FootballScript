@@ -6,11 +6,28 @@ function groupMaker(sheet) {
   const displayRange = groupMakerRange.offset(3, 0, 7, 3);
   displayRange.clearContent();
 
-  // 参加メンバーの配列を取得
-  let nameArray = getParticipants(sheet);
+  // メンバーをランダムに分割
+  let nameArray = [];
+  const usePoolCell = groupMakerRange.offset(1,0,1,1);
+  if(usePoolCell.isChecked()){
+    ////プールを利用する場合
+    const poolRange = groupMakerRange.offset(3,3,10,3);  //プールの範囲を取得
+    const poolsNum = 3;  //プールの最大数
 
+    //プール数分forループを回す
+    for(let i=0;i<poolsNum;i++){
+    let range = poolRange.offset(0,i,poolRange.getNumRows(),1);      
+    let partNameArray = transpose(range.getValues())[0].filter(function(value) {return value !== "";});
+    partNameArray = shuffleArray(partNameArray);
+    nameArray = nameArray.concat(partNameArray);
+    }
+  }else{
+    nameArray = getParticipants(sheet);
+    nameArray = shuffleArray(nameArray);
+  }
   // グループを表示する範囲に名前をセット
-  setValuesInOrder(sheet, groupMakerRange.offset(3, 0, 7, numOfGroups), nameArray);
+  const groupDisplayRange = groupMakerRange.offset(3,0,7, numOfGroups);
+  setValuesInOrder(sheet, groupDisplayRange, nameArray);
 }
 
 
