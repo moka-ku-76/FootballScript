@@ -33,7 +33,7 @@ function isMatchRangeFilled(sheet, matchNumber){
   const matchRange = sheet.getRange((matchNumber - 1) * heightOfMatch + 1, 1, heightOfMatch, widthOfMatch); // 対象の試合範囲
   const matchValues = matchRange.getValues();
 
-  // 出場者、レートがすべて入力されていることをチェック
+  // チームAの一人目、チームBの一人目、レートがすべて入力されていることをチェック
   if (matchValues[1][1] !== '' && matchValues[1][3] !== '' && matchValues[9][1] !== '') {
     // すべて入力されている場合、trueを返す
     return true
@@ -169,6 +169,10 @@ function incrementRate(sheet) {
 function getMatchInfo(sheet, target = -1){
   if(target === -1){
     target = getNumOfFinishedMatches(sheet) + 1;
+  }
+
+  if(!isMatchRangeFilled(sheet, target)){
+    throw new Error("必須情報が入力されていません。")
   }
 
   const matchRange = sheet.getRange((target - 1) * heightOfMatch + 1, startColumnOfMatchRange, heightOfMatch, widthOfGroupMaker);

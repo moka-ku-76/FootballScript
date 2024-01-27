@@ -8,6 +8,10 @@ const recordSheet = ss.getSheetByName("記録");
 const STATIC_SHEETS_NUMBER = 5;
 const MAX_RATE = 5; //レートの最大値
 
+// 登録メンバー
+const MEMBERS = paramSheet.getRange('A2:A').getValues().flat().filter(Boolean);
+
+
 const transpose = a=> a[0].map((_, c) => a.map(r => r[c]));
 
 ////試合エリア

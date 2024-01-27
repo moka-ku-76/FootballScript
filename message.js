@@ -1,5 +1,10 @@
 function generateMatchSummary(sheet, target = -1) {
-  const matchInfo = getMatchInfo(sheet, target=target)
+  let matchInfo;
+  try{
+    matchInfo = getMatchInfo(sheet, target=target)
+  } catch(e){
+    return "試合が見つかりません"
+  }
   let {
     teamAlphaName,
     teamBetaName,
@@ -13,17 +18,9 @@ function generateMatchSummary(sheet, target = -1) {
     No
   } = matchInfo;
 
-  // Get maximum number of players between both teams
+  // // Get maximum number of players between both teams
   const maxPlayers = Math.max(playersAlpha.length, playersBeta.length);
-
-  // Fill the remaining slots with empty strings for alignment
-  while (playersAlpha.length < maxPlayers) {
-    playersAlpha.push("");
-  }
-  
-  while (playersBeta.length < maxPlayers) {
-    playersBeta.push("");
-  }
+  [playersAlpha, playersBeta] = equalizeArrayLengths(playersAlpha, playersBeta)
 
   let summary = `第${No}試合　レート ${rate}\n\n`;
 
@@ -31,6 +28,7 @@ function generateMatchSummary(sheet, target = -1) {
     summary += `${teamAlphaName || ""}`.padEnd(10, " ") + "vs" + `${teamBetaName || ""}`.padStart(10, " ") + '\n';
   }
 
+  // メッセージの幅
   const len = 18;
   const fill = "　";
   // const fill = "\u3000";
@@ -45,6 +43,19 @@ function generateMatchSummary(sheet, target = -1) {
   summary += padCenter(`${pointAlpha}`, len/2, fill) + "-" + padCenter(`${pointBeta}`, len/2, fill) + '\n';
 
   return summary;
+}
+
+function generateMatchFinishMessage(sheet){
+  let message = "試合終了\n";
+  const numOfFinishedMatches = getNumOfFinishedMatches(sheet);
+  const finishedMatchSummary = generateMatchSummary(sheet, target = numOfFinishedMatches);
+  message += finishedMatchSummary + "\n\n";
+
+  message += "現在進行中の試合\n"
+  const nextMatchSummary = generateMatchSummary(sheet);
+  message += nextMatchSummary
+
+  return message;
 }
 
 function createHelpMessage() {

@@ -11,7 +11,7 @@ const eventObjectSample = {
       },
       "timestamp": 1462629479859,
       "postback": {
-        "data": "info",
+        "data": "today",
         "params": {
           "datetime": "2017-09-03T15:00",
           "date": "2017-09-03"
@@ -21,19 +21,35 @@ const eventObjectSample = {
   ]
 }
 
-function testmain(){
-  const date = "2024-01-14";
-  const sheet = ss.getSheetByName(date);
-  // const e = eventObjectSample[0]
-  // console.log(eventObjectSample.events[0])
-  // handlePostback(eventObjectSample.events[0], testUserId, sheet)
-  // cancelGoal(sheet, "岡")
-  // const info = createDailySummary(sheet)
-  // console.log(info)
-  // message = addParticipantsFromList(sheet, ["岡"])
-  // addAndSetParticipants(sheet, "岡")
-  groupMaker(sheet)
 
+const textEventObjectSample = {
+  "events": [
+    {
+      "type": "message",
+      "replyToken": "b60d432864f44d079f6d8efe86cf404b",
+      "source": {
+        "userId": "testUserId",
+        "type": "user"
+      },
+      "timestamp": 1462629479859,
+      "message": {
+        "type": "text",
+        "id": "325708",
+        "text": "!岡田"
+      }
+    }
+  ]
+}
+
+
+function testmain(){
+  const date = "2024-01-28";
+  const sheet = ss.getSheetByName(date);
+  // const e = eventObjectSample.events[0]
+  const e = textEventObjectSample.events[0]
+  // handlePostback(e, testUserId, sheet)
+  handleMessage(e, testUserId, sheet)
+  // console.log(generateMatchFinishMessage(sheet))
 }
 
 

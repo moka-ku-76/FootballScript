@@ -66,3 +66,26 @@ function splitArrayRandomly(array, chunkCount) {
   }
   return chunks;
 }
+
+function equalizeArrayLengths(arr1, arr2) {
+  // 二つの配列の長さを取得
+  const len1 = arr1.length;
+  const len2 = arr2.length;
+
+  // 長さの差を計算
+  const lengthDiff = Math.abs(len1 - len2);
+
+  // 長さが短い配列に空文字列を追加
+  if (len1 < len2) {
+    for (let i = 0; i < lengthDiff; i++) {
+      arr1.push("");
+    }
+  } else if (len2 < len1) {
+    for (let i = 0; i < lengthDiff; i++) {
+      arr2.push("");
+    }
+  }
+
+  // 長さを揃えた配列を返す
+  return [arr1, arr2];
+}

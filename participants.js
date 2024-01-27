@@ -114,7 +114,7 @@ function createQuickReplyItems(pageNumber) {
   const participants = getParticipants(latestResultSheet);
   
   // 現在の参加者リストに含まれていないメンバーのリストを取得
-  const nonParticipantMembers = members.filter(member => !participants.includes(member));
+  const nonParticipantMembers = MEMBERS.filter(member => !participants.includes(member));
 
   // このページのメンバーのスライスを取得
   const nonParticipantMembersForThisPage = nonParticipantMembers.slice(startIndex, startIndex + MAX_QUICK_REPLY_ITEMS);
@@ -146,14 +146,11 @@ function createQuickReplyItems(pageNumber) {
   return quickReplyItems;
 }
 
-
 function addParticipantsFromList(latestResultSheet, membersListToAdd){
-  // const membersListToAdd = membersListStringToAdd.split("、");
   let successNames = [];
   let failedNames = [];
   let message = "";
   for(member of membersListToAdd){
-    // addAndSetParticipants(latestResultSheet, member);
     try{
       addAndSetParticipants(latestResultSheet, member);
       successNames.push(member);
@@ -199,12 +196,6 @@ function addParticipantsRange(sheet){
 }
 
 function setParticipant(sheet, name) {
-  // 現在の参加者リストを取得し、重複参加をチェック
-  const currentParticipants = getParticipants(sheet);
-  if (currentParticipants.includes(name)) {
-    throw new Error(name + "は既に参加しています。");
-  }
-
   // 現在の参加者枠数を取得
   const widthOfParticipantRange = getWidthOfParticipantRange(sheet);
   if (widthOfParticipantRange <= currentParticipants.length ){
@@ -220,19 +211,25 @@ function setParticipant(sheet, name) {
 
 
 function addAndSetParticipants(sheet, name){
+  // メンバー一覧に含まれているかチェック
+  if (!MEMBERS.includes(name)){
+    console.error(name + "はメンバーとして登録されていません。")
+    throw new Error(name + "はメンバーとして登録されていません。")
+  }
+
+  // 現在の参加者リストを取得し、重複参加をチェック
+  const currentParticipants = getParticipants(sheet);
+  if (currentParticipants.includes(name)) {
+    console.error(name + "は既に参加しています。")
+    throw new Error(name + "は既に参加しています。");
+  }
+
   try {
     addParticipantsRange(sheet);
   } catch (e) {
-    // エラーコードが 'E001' の場合のみ setParticipant を実行
-    if (e.code === 'E001') {
-      console.warn(`エラーコード ${e.code} :` + e.message);
-    } else {
-      // それ以外のエラーの場合は、エラーを再投げして停止
       throw e;
-    }
   }
 
-  // エラーが発生しなかった場合も setParticipant を実行
   setParticipant(sheet, name);  
 }
 

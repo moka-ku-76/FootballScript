@@ -93,13 +93,14 @@ function handleMessage(e, userId, latestResultSheet){
 				break
 			case "@finish":
 				//試合結果を表示
-				message = generateMatchSummary(latestResultSheet);
+				// message = generateMatchSummary(latestResultSheet);
 				try{
 					finishMatch(latestResultSheet);
 				} catch(e){
           console.error(e.message)
 					message = e.message;
 				}
+				message = generateMatchFinishMessage(latestResultSheet)
 				logMessage(e, message);
 				break
 			case "@rsvp":
@@ -117,7 +118,7 @@ function handleMessage(e, userId, latestResultSheet){
 				}
 				break
 			case "@members":
-				message = '登録メンバー: \n' + members.join('\n');
+				message = '登録メンバー: \n' + MEMBERS.join('\n');
 				logMessage(e, message);
 				break
 			case "@cancelgoal":
