@@ -3,7 +3,6 @@ const ACCESS_TOKEN = ScriptProperties.getProperty('LINEtoken');
 const bot = new MyLineBotSdk(ACCESS_TOKEN);
 
 const MAX_QUICK_REPLY_ITEMS = 12;
-const members = paramSheet.getRange('A2:A').getValues().flat().filter(Boolean);
 let message;
 
 function doPost(e) { bot.call(e, callback) };
