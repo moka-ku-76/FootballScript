@@ -43,13 +43,30 @@ const textEventObjectSample = {
 
 
 function testmain(){
-  const date = "2024-01-28";
+  const date = "2024-01-14";
   const sheet = ss.getSheetByName(date);
   // const e = eventObjectSample.events[0]
   const e = textEventObjectSample.events[0]
   // handlePostback(e, testUserId, sheet)
-  handleMessage(e, testUserId, sheet)
+  // handleMessage(e, testUserId, sheet)
   // console.log(generateMatchFinishMessage(sheet))
+  // inputRecordEachDay()
+  // updateLatestRecord()
+  // 処理開始前にユーザーに通知
+  // sheet.toast('処理を開始します...', '実行中', -1);
+  // SpreadsheetApp.getActiveSpreadsheet().toast('処理を開始します...', '実行中', -1);
+
+
+  // // 長い処理
+  // // ...
+  // Utilities.sleep(5000);
+
+  // // 処理完了後にユーザーに通知
+  // // sheet.toast('処理が完了しました!', '完了');
+  // SpreadsheetApp.getActiveSpreadsheet().toast('処理が完了しました!', '完了');
+  showDialog()
+
+
 }
 
 

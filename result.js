@@ -88,7 +88,7 @@ function inputRecordEachDay(){
   });
   const key = Object.keys(recordByMember)[0];
   const recordItemsNumber = recordByMember[key].length;
-  const recordRange = recordSheet.getRange(3, 1, Object.keys(recordByMember).length, 1 + recordItemsNumber);
+  const recordRange = recordSheet.getRange(4, 1, Object.keys(recordByMember).length, 1 + recordItemsNumber);
   // 前回までの記録をクリア
   recordRange.clearContent();
 
@@ -102,6 +102,51 @@ function inputRecordEachDay(){
   const pointsColumnIndex = 6; 
   const ascending = false;
   recordRange.sort([{column: pointsColumnIndex, ascending: ascending}]);
+}
+
+function updateLatestRecord() {
+  // recordSheetのB2セルから最新の更新日時を取得
+  const lastUpdatedCell = recordSheet.getRange('B2');
+  const lastUpdatedDate = lastUpdatedCell.getValue();
+
+  // 最終更新日時より後の結果シート名を全て取得
+  const updatedSheetNames = getUpdatedResultSheets(lastUpdatedDate);
+  if (updatedSheetNames.length > 0) {
+    // 各更新された結果シートについて処理
+    updatedSheetNames.forEach(sheetName => {
+      const resultSheet = ss.getSheetByName(sheetName);
+
+      // 結果シートから結果を取得
+      const records = getDailyRecords(resultSheet);
+      const names = Object.keys(records);
+      names.forEach(name => {
+        const existingRecord = recordData[recordMembersMapping[name]].slice(1).slice(0, numOfColumnsToRecord)
+        const newRecord = records[name];
+        const updatedRecord = existingRecord.map((value, index) => value + newRecord[index]);
+        recordDataRange.offset(recordMembersMapping[name], 1, 1, numOfColumnsToRecord).setValues([updatedRecord]);
+      });
+    });
+    // 最後に処理した結果シートの日付を最新の更新日時としてB2セルに記入  
+    const lastSheetDate = new Date(updatedSheetNames[updatedSheetNames.length - 1]);
+    lastUpdatedCell.setValue(lastSheetDate);
+  } else {
+    console.log("新しい結果シートはありません")
+  }
+}
+
+function getUpdatedResultSheets(lastUpdatedDate) {
+  let sheets = ss.getSheets();
+  sheets = sheets.map(sheet => sheet.getName());
+  const exp = /^(\d{4}-\d{2}-\d{2})(-\d+)?$/; //結果シートの名前パターン
+  let updatedSheets = sheets.filter(sheetName => {
+    if (exp.test(sheetName)) {
+      const sheetDate = new Date(sheetName);
+      return sheetDate > lastUpdatedDate;
+    }
+    return false;
+  });
+  updatedSheets.sort((a, b) => a.localeCompare(b)); // 日付が古い順にソート
+  return updatedSheets;
 }
 
 

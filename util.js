@@ -89,3 +89,11 @@ function equalizeArrayLengths(arr1, arr2) {
   // 長さを揃えた配列を返す
   return [arr1, arr2];
 }
+
+function showDialog() {
+  var html = HtmlService.createHtmlOutputFromFile('Executing')
+      .setWidth(400)
+      .setHeight(300);
+  SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
+      .showModalDialog(html, '処理を実行しています...');
+}

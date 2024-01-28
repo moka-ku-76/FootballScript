@@ -40,9 +40,11 @@ const startRowOfResultRange = 1;
 const startColumnOfResultRange = 6;
 
 //記録シートの全データ
+const numOfColumnsToRecord = 6
 const recordLastRow = recordSheet.getLastRow();
 const recordLastColumn = recordSheet.getLastColumn();
-const recordDataRange = recordSheet.getRange(2, 1, recordLastRow - 1, recordLastColumn);
+const recordInfoHeight = 2
+const recordDataRange = recordSheet.getRange(1 + recordInfoHeight, 1, recordLastRow - recordInfoHeight, recordLastColumn);
 const recordData = recordDataRange.getValues();
 const recordDataVertical = transpose(recordData);
 const recordHeader = recordData[0];

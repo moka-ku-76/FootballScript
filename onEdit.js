@@ -5,11 +5,14 @@ function onEdit(e){
     let row = e.range.getRow();
     let column = e.range.getColumn();
 
-    if ( row == 1 && column == 2){
-      const fleshTriggerCell = activeSheet.getRange(1, 2);
+    if ( row == 2 && column == 1){
+      const fleshTriggerCell = activeSheet.getRange(2, 1);
       if (fleshTriggerCell.isChecked()){
-        inputRecordEachDay();
+        // SpreadsheetApp.getActiveSpreadsheet().toast('処理を開始します...', '実行中', -1);
+        showDialog();
+        updateLatestRecord();
         fleshTriggerCell.uncheck()
+        // SpreadsheetApp.getActiveSpreadsheet().toast('処理が完了しました!', '完了', 2);
       }
     } else {
       return
